@@ -6,12 +6,13 @@
 
 #include "linux_parser.h"
 
+
 using std::stof;
 using std::string;
 using std::to_string;
 using std::vector;
 using std::stoi;
-using std::stold;
+using std::stol;
 
 // TODO: Return the aggregate CPU utilization
 float Processor::Utilization() { 

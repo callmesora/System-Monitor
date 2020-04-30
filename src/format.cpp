@@ -13,8 +13,13 @@ string Format::ElapsedTime(long seconds) {
     
 
     long hour= seconds/3600;
-    long min= seconds/60;
     long sec= seconds;
+    sec-=hour*3600;
+    
+    long min= sec/60;
+    sec-=min*60;
+
+    
 
     std::ostringstream stream;
   stream << std::setw(2) << std::setfill('0') << hour << ":" 

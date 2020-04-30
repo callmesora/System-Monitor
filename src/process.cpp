@@ -18,7 +18,12 @@ int Process::Pid() { return pid_; }
 float Process::CpuUtilization() { 
   long activejiffies = LinuxParser::ActiveJiffies(pid_);
   long processuptime= LinuxParser::UpTime(pid_);
-  return static_cast<float>(activejiffies/processuptime); } //Ask Mentor is this is how static_cast works
+  long systemuptime= LinuxParser::UpTime();
+  long seconds= systemuptime - processuptime ;
+
+  
+  return static_cast<float>(activejiffies/seconds); } //Ask Mentor is this is how static_cast works
+  //https://stackoverflow.com/questions/16726779/how-do-i-get-the-total-cpu-usage-of-an-application-from-proc-pid-stat/16736599#16736599
 
 // TODO: Return the command that generated this process
 string Process::Command() { return LinuxParser::Command(pid_); }

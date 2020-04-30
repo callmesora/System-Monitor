@@ -2,6 +2,9 @@
 #include <unistd.h>
 #include <string>
 #include <vector>
+#include <iostream>
+#include <type_traits>
+
 
 #include "linux_parser.h"
 
@@ -10,7 +13,7 @@ using std::string;
 using std::to_string;
 using std::vector;
 using std::stoi;
-using std::stold;
+using std::stol;
 
 // DONE: An example of how to read data from the filesystem
 string LinuxParser::OperatingSystem() {
@@ -89,6 +92,7 @@ float LinuxParser::MemoryUtilization() {
       }
     }
   }
+  stream.close();
   return ((totalmem - freemem)/totalmem);
 
   // return 0.0;
@@ -97,16 +101,15 @@ float LinuxParser::MemoryUtilization() {
 // TODO: Read and return the system uptime
 long LinuxParser::UpTime() {
   string line;
-  string value, value2;
+  long value;
   std::ifstream stream(kProcDirectory + kUptimeFilename);
   if (stream.is_open()) {
     std::getline(stream, line);
     std::istringstream linestream(line);
-    linestream >> value >> value2;
-    return std::stol(value);
+    linestream >> value;
     
   }
-  return 0;
+  return value;;
   // return 0;
 }
 
@@ -123,29 +126,26 @@ long LinuxParser::Jiffies() {
 // REMOVE: [[maybe_unused]] once you define the function
 long LinuxParser::ActiveJiffies(int pid) {
   
+  
   std::ifstream filestream(kProcDirectory+std::to_string(pid) +kStatFilename);
   string line;
-  string temp;
-  long v13, v14, v15,v16;
+  string value;
+  vector<string>statsList;
+  long activeJiffies=0;
+ 
   if (filestream.is_open()){
     std::getline(filestream,line);
     std::istringstream linestream(line);
-
-    for (int i=13; i<=16;i++) {
-      linestream>>temp;
-      if (i==13) {
-        v13 = std::stol(temp);}
-      if (i==14) {
-        v14 = std::stol(temp);
-    }
-    if (i==15) {
-        v15 = std::stol(temp);
+    while (linestream>>value) {
+      statsList.push_back(value);} 
   }
-  if (i==16) {
-        v16 = std::stol(temp);}
-    }
-  }
-  return ((v13+v14+v15+v16 )/sysconf(_SC_CLK_TCK)); //ASk Mentor is I should divide here
+  activeJiffies = ( std::stol(statsList[13]) + std::stol(statsList[14]) +
+                std::stol(statsList[15]) + std::stol(statsList[16]) )/sysconf(_SC_CLK_TCK);
+  filestream.close();
+   //ASk Mentor is I should divide here
+  /**/
+  //return 0;
+  return activeJiffies;
 }
     
 
@@ -154,6 +154,7 @@ long LinuxParser::ActiveJiffies(int pid) {
 
 // TODO: Read and return the number of active jiffies for the system
 long LinuxParser::ActiveJiffies() {
+  
   std::ifstream stream(kProcDirectory + kStatFilename);
   vector<string> value;
   long sum = 0;
@@ -171,11 +172,14 @@ long LinuxParser::ActiveJiffies() {
 
     // return 0;
   }
-  return sum;
+  return sum; 
+  /**/
+  //return 0;
 }
 
 // TODO: Read and return the number of idle jiffies for the system
 long LinuxParser::IdleJiffies() {
+  
   std::ifstream stream(kProcDirectory + "stat");
   string line;
   string key;
@@ -196,8 +200,11 @@ long LinuxParser::IdleJiffies() {
         value6 >> value7 >> value8 >> value9 >> value10;
     
   }
+
+  std::cout<<value4 << value5 <<"\n";
 return (stol(value4) + stol(value5));
-  // return 0;
+/**/
+  //return 0;
 }
 
 // TODO: Read and return CPU utilization
@@ -289,6 +296,7 @@ string LinuxParser::Ram(int pid) {
         }
       }
     }
+    return string();
   }
  
 
@@ -310,6 +318,7 @@ string LinuxParser::Uid(int pid) {
         }
       }
     }
+    return string();
  }
 
 // TODO: Read and return the user associated with a process
@@ -331,7 +340,8 @@ string LinuxParser::User(int pid) {
         }
       }
     }
-  return string();} 
+  } 
+  return string();
  }
 
 // TODO: Read and return the uptime of a process
@@ -340,7 +350,7 @@ long LinuxParser::UpTime(int pid) {
   std::ifstream filestream(kProcDirectory+std::to_string(pid) +kStatFilename);
   string line;
   string temp;
-  long uptime;
+  
   if (filestream.is_open()){
     std::getline(filestream,line);
     std::istringstream linestream(line);
@@ -348,11 +358,13 @@ long LinuxParser::UpTime(int pid) {
     for (int i=0; i<=21;i++) {
       linestream>>temp;
       if (i==21) {
-        uptime = std::stol(temp);
+        
+        long output = stof(temp) / sysconf(_SC_CLK_TCK);
+        return output;
 
       }
     }
   }
-  return uptime;
+  return 0.0;
   }
 
