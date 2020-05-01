@@ -39,3 +39,10 @@ This project uses [Make](https://www.gnu.org/software/make/). The Makefile has f
 5. Implement the `System`, `Process`, and `Processor` classes, as well as functions within the `LinuxParser` namespace.
 
 6. Submit!
+
+## Inspired in these repos 
+https://github.com/IvanCheng1/System-Monitor-in-Cpp
+https://github.com/amine-zaiem/CppND-System-Monitor/blob/master/src/linux_parser.cpp
+https://github.com/sammysun0711/CppND-System-Monitor
+
+They where all of great help trying to understand how to fix my bugs. Special thanks to them.
