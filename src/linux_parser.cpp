@@ -93,7 +93,7 @@ float LinuxParser::MemoryUtilization() {
     }
   }
   stream.close();
-  return ((totalmem - freemem)/totalmem);
+  return ((float)(totalmem - freemem)/ (float) totalmem);
 
   // return 0.0;
 }
@@ -282,7 +282,7 @@ string LinuxParser::Command(int pid) {
 // REMOVE: [[maybe_unused]] once you define the function
 string LinuxParser::Ram(int pid) { 
   string line;
-  string value;
+  long value;
   string key;
   std::ifstream filestream(kProcDirectory+to_string(pid)+kStatusFilename) ;
     if (filestream.is_open()) {
@@ -291,7 +291,7 @@ string LinuxParser::Ram(int pid) {
         std::istringstream linestream(line);
         while (linestream>>key>>value){
           if( key=="VmSize") {
-            return value;
+            return to_string(value/1000);
           }
         }
       }
