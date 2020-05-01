@@ -25,12 +25,12 @@ float Processor::Utilization() {
     float irq = std::stof(keys[5]);
     float softirq = std::stof(keys[6]);
     float steal = std::stof(keys[7]);
-    float guest = std::stof(keys[8]);
+
 
     float PrevIdle = 0.0;
     float Idle = idle + iowait;
 
-    float PrevNonIdle =0.0;
+
     float NonIdle = user + nice + system + irq + softirq + steal;
 
     float PrevTotal = 0.0;
